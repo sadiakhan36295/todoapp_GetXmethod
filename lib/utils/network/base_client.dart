@@ -6,89 +6,104 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:practice_todoapp/services/local_storage.dart';
 
-
 class BaseClient {
   static var noInternetMessage = "Please check your connection!";
 
-  static getRequest({required String api, params}) async {
+  /// GET Request
+  static Future<http.Response> getRequest({required String api, Map<String, String>? params}) async {
     debugPrint("\nYou hit: $api");
     debugPrint("Request Params: $params");
 
-    /// get x storage
     final StorageService storageService = Get.put(StorageService());
     String? accessToken = storageService.read<String>('accessToken');
 
     var headers = {
-      'Content-type': 'application/json',
-      "Authorization": "Bearer $accessToken",
-    };
-    debugPrint("statusCode: id: ");
-
-    http.Response response = await http.get(
-      Uri.parse(api).replace(queryParameters: params),
-      headers: headers,
-    );
-    return response;
-  }
-
-  static postRequest({required String api, body}) async {
-    debugPrint('\nYou hit: $api');
-    debugPrint('Request Body: ${jsonEncode(body)}');
-
-    /// get x storage
-    final StorageService storageService = Get.put(StorageService());
-    String? accessToken = storageService.read<String>('accessToken');
-
-    var headers = {
-      'Accept': 'application/json',
-      "Authorization": "Bearer $accessToken",
+      'Content-Type': 'application/json',
+      if (accessToken != null) "Authorization": "Bearer $accessToken",
     };
 
-    http.Response response = await http.post(
-      Uri.parse(api),
-      body: body,
-      headers: headers,
-      encoding: Encoding.getByName("utf-8"),
-    );
-    return response;
+    final uri = Uri.parse(api).replace(queryParameters: params);
+    try {
+      http.Response response = await http.get(uri, headers: headers);
+      return response;
+    } on SocketException {
+      throw noInternetMessage;
+    }
   }
 
-  static deleteRequest({required String api, body}) async {
-    debugPrint('\nYou hit: $api');
-    debugPrint('Request Body: ${jsonEncode(body)}');
-
-    /// get x storage
-    final StorageService _storageService = Get.put(StorageService());
-    String? accessToken = _storageService.read<String>('accessToken');
-
-    var headers = {
-      'Accept': 'application/json',
-      "Authorization": "Bearer $accessToken",
-    };
-
-    http.Response response = await http.delete(
-      Uri.parse(api),
-      body: body,
-      headers: headers,
-    );
-    return response;
-  }
-
-  // Add PATCH method here
-  static patchRequest({
+  /// POST Request with token and JSON encoding
+  static Future<dynamic> postRequest({
     required String api,
     required Map<String, dynamic> body,
   }) async {
     debugPrint('\nYou hit: $api');
     debugPrint('Request Body: ${jsonEncode(body)}');
 
-    /// get x storage
     final StorageService storageService = Get.put(StorageService());
     String? accessToken = storageService.read<String>('accessToken');
 
     var headers = {
-      'Content-type': 'application/json',
-      "Authorization": "Bearer $accessToken",
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      if (accessToken != null) "Authorization": "Bearer $accessToken",
+    };
+
+    try {
+      http.Response response = await http.post(
+        Uri.parse(api),
+        body: jsonEncode(body),
+        headers: headers,
+      );
+
+      return handleResponse(response);
+    } on SocketException {
+      throw noInternetMessage;
+    } on FormatException {
+      throw "Bad response format";
+    } catch (e) {
+      throw "POST Error: ${e.toString()}";
+    }
+  }
+
+  /// DELETE Request
+  static Future<http.Response> deleteRequest({required String api, Map<String, dynamic>? body}) async {
+    debugPrint('\nYou hit: $api');
+    debugPrint('Request Body: ${jsonEncode(body)}');
+
+    final StorageService storageService = Get.put(StorageService());
+    String? accessToken = storageService.read<String>('accessToken');
+
+    var headers = {
+      'Accept': 'application/json',
+      if (accessToken != null) "Authorization": "Bearer $accessToken",
+    };
+
+    try {
+      http.Response response = await http.delete(
+        Uri.parse(api),
+        body: body != null ? jsonEncode(body) : null,
+        headers: headers,
+      );
+      return response;
+    } on SocketException {
+      throw noInternetMessage;
+    }
+  }
+
+  /// PATCH Request
+  static Future<http.Response> patchRequest({
+    required String api,
+    required Map<String, dynamic> body,
+  }) async {
+    debugPrint('\nYou hit: $api');
+    debugPrint('Request Body: ${jsonEncode(body)}');
+
+    final StorageService storageService = Get.put(StorageService());
+    String? accessToken = storageService.read<String>('accessToken');
+
+    var headers = {
+      'Content-Type': 'application/json',
+      if (accessToken != null) "Authorization": "Bearer $accessToken",
     };
 
     try {
@@ -105,12 +120,11 @@ class BaseClient {
     }
   }
 
-
-  /// multipart request make
+  /// Multipart POST Request
   static Future<dynamic> multipartAddRequest({
     required String api,
     required Map<String, String> body,
-    File? file, // Optional File
+    File? file,
   }) async {
     debugPrint("\nYou hit: $api");
     debugPrint("Request body: $body");
@@ -142,11 +156,8 @@ class BaseClient {
     }
   }
 
-
-
-  /// for handle the response
-
-  static handleResponse(http.Response response) async {
+  /// Unified Response Handler
+  static dynamic handleResponse(http.Response response) {
     try {
       if (response.statusCode >= 200 && response.statusCode <= 210) {
         debugPrint('SuccessCode: ${response.statusCode}');
@@ -180,12 +191,42 @@ class BaseClient {
 
         throw msg;
       }
-    } on SocketException catch (_) {
+    } on SocketException {
       throw noInternetMessage;
-    } on FormatException catch (_) {
+    } on FormatException {
       throw "Bad response format";
     } catch (e) {
       throw e.toString();
+    }
+  }
+
+  /// Extra POST Request with Optional Headers
+  static Future<dynamic> postRequestWithHeaders({
+    required String api,
+    required Map<String, dynamic> body,
+    Map<String, String>? headers,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(api),
+        headers: headers ?? {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(
+            'Failed POST: ${response.statusCode} ${response.body}');
+      }
+    } on SocketException {
+      throw noInternetMessage;
+    } on FormatException {
+      throw "Invalid response format.";
+    } catch (e) {
+      throw "POST Error: ${e.toString()}";
     }
   }
 }

@@ -1,40 +1,34 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+
 import 'package:practice_todoapp/utils/network/api_urls.dart';
 import 'package:practice_todoapp/utils/network/base_client.dart';
-
 import 'package:practice_todoapp/utils/routes/routes.dart';
 import 'package:practice_todoapp/view/widgets/custom_toast.dart';
 
 class SignInController extends GetxController {
   var isLoading = false.obs;
+  final box = GetStorage();
 
   Future<void> signIn({
     required String email,
     required String password,
-    required BuildContext context,
+    BuildContext? context,
   }) async {
-    isLoading.value = true;
-
-    Map<String, String> body = {
-      'email': email,
-      'password': password,
-    };
-
     try {
-      print('Sending login request: $body');
+      isLoading.value = true;
 
-      final res = await BaseClient.postRequest(
+      final Map<String, dynamic> response = await BaseClient.postRequest(
         api: ApiUrl.signIn,
-        body: body,
+        body: {
+          "email": email,
+          "password": password,
+        },
       );
 
-      print("Raw response: $res");
-
-      // Decode the response
-      final response = jsonDecode(res.body);
-      print("Login response: $response");
+      isLoading.value = false;
 
       if (response["status"] == true || response["success"] == true) {
         CustomToast.showToast(
@@ -42,7 +36,11 @@ class SignInController extends GetxController {
           isError: false,
         );
 
-        //  Navigate using named route
+        final token = response["token"];
+        if (token != null) {
+          box.write("token", token);
+        }
+
         Get.offAllNamed(AppRoutes.home);
       } else {
         CustomToast.showToast(
@@ -51,10 +49,8 @@ class SignInController extends GetxController {
         );
       }
     } catch (e) {
-      print("Error during login: $e");
-      CustomToast.showToast("Something went wrong", isError: true);
-    } finally {
       isLoading.value = false;
+      CustomToast.showToast("Login Error: $e", isError: true);
     }
   }
 }

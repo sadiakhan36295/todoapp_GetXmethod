@@ -66,6 +66,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   return null;
                 },
                 decoration: InputDecoration(
+                   hintText: 'michelle.rivera@example.com',
                   filled: true,
                   fillColor: const Color(0xFFF9F9F9),
                   border: OutlineInputBorder(
@@ -86,6 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Password is required';
+                    
                   }
                   if (value.length < 5) {
                     return '';
@@ -93,6 +95,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   return null;
                 },
                 decoration: InputDecoration(
+                hintText: '........',
                   filled: true,
                   fillColor: const Color(0xFFF9F9F9),
                   border: OutlineInputBorder(

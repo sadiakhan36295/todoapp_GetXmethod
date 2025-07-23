@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:practice_todoapp/view/widgets/custom_button/custom_button.dart';
 
-
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
 
@@ -42,6 +41,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true, // ✅ Prevent overflow when keyboard appears
       backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -56,7 +56,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView( // ✅ Scrolls when keyboard appears
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,15 +80,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 controller: titleController,
                 style: const TextStyle(color: Colors.black),
                 decoration: const InputDecoration(
-                  hintText: 'Enter your task title',
+                  hintText: ' e.g. Design Landing Page Header ',
                   hintStyle: TextStyle(color: Colors.grey),
                   border: InputBorder.none,
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
             const Text(
               'Description',
               style: TextStyle(
@@ -109,15 +107,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 maxLines: 5,
                 style: const TextStyle(color: Colors.black),
                 decoration: const InputDecoration(
-                  hintText: 'Enter task description',
+                  hintText: 'e.g. Include logo, navigation, and CTA button with brand color',
                   hintStyle: TextStyle(color: Colors.grey),
                   border: InputBorder.none,
                 ),
               ),
             ),
-
-            const SizedBox(height: 30),
-
+            const SizedBox(height: 40), // Reduced spacing to avoid overflow
             CustomButton(
               title: 'Save Task',
               onTap: _saveTask,
@@ -131,8 +127,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ],
         ),
       ),
-
-      // ✅ Updated bottomNavigationBar (height = 80, fixed overflow)
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 8.0,
@@ -154,8 +148,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ),
         ),
       ),
-
-       floatingActionButton: FloatingActionButton.small(
+      floatingActionButton: FloatingActionButton.small(
         onPressed: () {},
         backgroundColor: Colors.green,
         child: const Icon(Icons.add, size: 20),
