@@ -21,7 +21,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF9F9F9),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
         child: Form(
@@ -68,7 +68,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 decoration: InputDecoration(
                    hintText: 'michelle.rivera@example.com',
                   filled: true,
-                  fillColor: const Color(0xFFF9F9F9),
+                 fillColor: Colors.white60,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -97,7 +97,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 decoration: InputDecoration(
                 hintText: '........',
                   filled: true,
-                  fillColor: const Color(0xFFF9F9F9),
+                  fillColor: Colors.white60,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -168,7 +168,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: const Text(
                       "Sign Up",
                       style: TextStyle(
-                        color: Colors.green,
+                        color: Colors.lightGreen,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -184,7 +184,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.lightGreen,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -205,7 +205,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
                             "Log In",
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                   ),
                 );

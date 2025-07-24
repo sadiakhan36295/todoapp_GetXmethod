@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:practice_todoapp/view/screens/home_screen/home_screen.dart';
+import 'package:practice_todoapp/view/screens/auth/verify_email/verify_email_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -10,12 +10,20 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
   bool agreeToPolicy = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF9F9F9),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         child: Form(
@@ -42,22 +50,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 30),
 
               _buildLabel("First Name"),
-              _buildTextField(),
+              _buildTextField(firstNameController, "Enter First Name"),
 
               _buildLabel("Last Name"),
-              _buildTextField(),
+              _buildTextField(lastNameController, "Enter Last Name"),
 
               _buildLabel("Email Address"),
-              _buildTextField(),
+              _buildTextField(emailController, "Enter Email"),
 
               _buildLabel("Address"),
-              _buildTextField(),
+              _buildTextField(addressController, "Enter Address"),
 
-              _buildLabel("PassWord"),
-              _buildPasswordField(),
+              _buildLabel("Password"),
+              _buildPasswordField(passwordController, "Enter Password"),
 
               _buildLabel("Confirm Password"),
-              _buildPasswordField(),
+              _buildPasswordField(confirmPasswordController, "Confirm Password"),
 
               const SizedBox(height: 12),
               Row(
@@ -110,12 +118,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const Text("Already have an account? "),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context); // Return to sign in
+                      Navigator.pop(context); // Back to SignInScreen
                     },
                     child: const Text(
                       "Log In",
                       style: TextStyle(
-                        color: Colors.green,
+                        color: Colors.lightGreen,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -132,19 +140,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     if (formKey.currentState!.validate() && agreeToPolicy) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const HomeScreen()),
+                        MaterialPageRoute(
+                          builder: (_) => const VerifyEmailScreen(),
+                        ),
                       );
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.lightGreen,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
                   child: const Text(
                     "Continue",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ),
@@ -164,11 +174,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       );
 
-  Widget _buildTextField() {
+  Widget _buildTextField(TextEditingController controller, String hint) {
     return TextFormField(
+      controller: controller,
+      validator: (value) =>
+          value == null || value.isEmpty ? "This field is required" : null,
       decoration: InputDecoration(
         filled: true,
-        fillColor: const Color(0xFFF9F9F9),
+        fillColor: Colors.white60,
+        hintText: hint,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
@@ -177,12 +191,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildPasswordField() {
+  Widget _buildPasswordField(TextEditingController controller, String hint) {
     return TextFormField(
+      controller: controller,
       obscureText: true,
+      validator: (value) =>
+          value == null || value.isEmpty ? "This field is required" : null,
       decoration: InputDecoration(
         filled: true,
-        fillColor: const Color(0xFFF9F9F9),
+        fillColor: Colors.white60,
+        hintText: hint,
         suffixIcon: const Icon(Icons.visibility_off),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -190,6 +208,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
     );
-    
   }
 }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:practice_todoapp/gen/assets.gen.dart';
+import 'package:practice_todoapp/utils/app_colors/app_colors.dart';
 import 'package:practice_todoapp/view/controllers/add_task_controller.dart';
 import 'package:practice_todoapp/view/model/task_model.dart';
 import 'package:practice_todoapp/view/screens/add_task_screen/add_task_screen.dart';
 import 'package:practice_todoapp/view/screens/auth/verify_email/verify_email_screen.dart';
 import 'package:practice_todoapp/view/widgets/custom_container/custom_container.dart';
+import 'package:practice_todoapp/view/widgets/custom_user/custom_user.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +18,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final AddTaskController taskController = Get.put(AddTaskController());
-  int currentIndex = 0;
+
+  int currentIndex = 0; // ✅ Fix added here
 
   Future<void> _navigateToAddTask() async {
     final result = await Navigator.push<Map<String, String>>(
@@ -41,22 +45,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // ✅ Fix bottom overflow when keyboard appears
-      backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.grey.shade300,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ✅ Use correct image asset path
-            SizedBox(
-              width: double.infinity,
-              height: 100,
-              child: Image.asset(
-                'assets/images/user.jpeg', // Make sure this file exists and path is correct in pubspec.yaml
-                fit: BoxFit.cover,
-              ),
+            const CustomUser(
+              username: 'Hello Mojahid',
+              status: 'Welcome to Task Manager',
             ),
-
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Text(
@@ -68,8 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
-            // ✅ Task List
             Expanded(
               child: Obx(() {
                 if (taskController.isLoading.value) {
@@ -105,30 +101,60 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // ✅ Bottom Navigation
+      /// ✅ Custom full-width bottom container with image
       bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Colors.grey,
-        currentIndex: currentIndex,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Add Task"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
+  backgroundColor: Colors.white,
+  currentIndex: currentIndex,
+  onTap: (index) {
+    setState(() {
+      currentIndex = index;
+    });
 
-          if (index == 1) {
-            _navigateToAddTask();
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const VerifyEmailScreen()),
-            );
-          }
-        },
+    if (index == 1) {
+      _navigateToAddTask();
+    } else if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const VerifyEmailScreen()),
+      );
+    }
+  },
+  items: [
+    /// 🟩 Home Item with Green Circle Icon if selected
+    BottomNavigationBarItem(
+      icon: Container(
+        decoration: BoxDecoration(
+          color: currentIndex == 0 ? Colors.lightGreen : Colors.lightGreen,
+          shape: BoxShape.circle,
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Icon(
+          Icons.home,
+          color: currentIndex == 0 ? Colors.white : Colors.white,
+        ),
       ),
+      label: "",
+    ),
+
+    /// ➕ Add Task Item - Always Black Icon
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.add, color: Colors.black),
+      label: "Add Task",
+    ),
+
+    /// 👤 Profile Item - Always Black Icon
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.person, color: Colors.black),
+      label: "Profile",
+    ),
+  ],
+  selectedLabelStyle: const TextStyle(color: Colors.black),
+  unselectedLabelStyle: const TextStyle(color: Colors.black),
+  selectedItemColor: Colors.black,
+  unselectedItemColor: Colors.black,
+),
+
     );
   }
 }
+

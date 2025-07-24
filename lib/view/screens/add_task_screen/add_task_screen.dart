@@ -41,14 +41,23 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // ✅ Prevent overflow when keyboard appears
-      backgroundColor: const Color(0xFFF9F9F9),
+      resizeToAvoidBottomInset: true,
+       backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white60,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.lightGreen),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
         ),
         centerTitle: true,
         title: const Text(
@@ -56,7 +65,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: SingleChildScrollView( // ✅ Scrolls when keyboard appears
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +82,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(186, 245, 245, 245),
+                color: Colors.white60,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TextField(
@@ -99,7 +108,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(186, 245, 245, 245),
+                color: Colors.white60,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TextField(
@@ -113,13 +122,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 40), // Reduced spacing to avoid overflow
+            const SizedBox(height: 40),
             CustomButton(
               title: 'Save Task',
               onTap: _saveTask,
               titleColor: Colors.white,
-              backgroundColor: Colors.green,
-              fillColor: Colors.green,
+              backgroundColor: Colors.lightGreen,
+              fillColor: Colors.lightGreen,
               height: 50,
               width: double.infinity,
               marginVerticel: 0,
@@ -127,33 +136,49 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        child: SizedBox(
-          height: 80,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: Icon(Icons.assignment_outlined),
-              ),
-              SizedBox(width: 40), // Space for FAB
-              Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: Icon(Icons.person_outline),
-              ),
-            ],
-          ),
-        ),
+     bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+  currentIndex: 1, // Hardcoded to Add Task tab
+  onTap: (index) {
+    if (index == 0) {
+      Navigator.pop(context); // Go back to Home
+    }
+  },
+  items: [
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.home, color: Colors.black),
+      label: "My tasks",
+    ),
+    BottomNavigationBarItem(
+  icon: Transform.translate(
+    offset: const Offset(0, -12), // Move the icon 10 pixels up
+    child: Container(
+      padding: const EdgeInsets.all(14), // Bigger padding for bigger circle
+      decoration: const BoxDecoration(
+        color: Colors.lightGreen, // Circle background color
+        shape: BoxShape.circle,
       ),
-      floatingActionButton: FloatingActionButton.small(
-        onPressed: () {},
-        backgroundColor: Colors.green,
-        child: const Icon(Icons.add, size: 20),
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+        size: 28, // Bigger icon size
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    ),
+  ),
+  label: "",
+),
+
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.person, color: Colors.black),
+      label: "Profile",
+    ),
+  ],
+  selectedLabelStyle: const TextStyle(color: Colors.black),
+  unselectedLabelStyle: const TextStyle(color: Colors.black),
+  selectedItemColor: Colors.black,
+  unselectedItemColor: Colors.black,
+),
+
     );
   }
 }
