@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:practice_todoapp/view/widgets/custom_icon/custom_icon_container.dart';
+
 
 class Assets {
   Assets._();
@@ -13,8 +13,8 @@ class _AssetsImages {
   AssetGenImage get container => AssetGenImage('assets/images/container.png');
   AssetGenImage get user => AssetGenImage('assets/images/user.jpeg');
   AssetGenImage get task => const AssetGenImage('assets/images/task.jpeg');
-  AssetGenImage get iconcontainer => const AssetGenImage('assets/images/icon_container.jpeg');
-    AssetGenImage get addtaskicon => const AssetGenImage('assets/images/addtask_icon.jpeg');
+  AssetGenImage get profilelogo => const AssetGenImage('assets/images/profile_logo.jpeg');
+  AssetGenImage get myprofilelogo => const AssetGenImage('assets/images/my_profile_logo.jpeg');
 }
 
 class AssetGenImage {

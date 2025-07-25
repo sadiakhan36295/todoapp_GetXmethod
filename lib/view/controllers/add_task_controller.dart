@@ -34,4 +34,20 @@ class AddTaskController extends GetxController {
     tasks.add(newTask);
     saveTasksToStorage();
   }
+
+  void updateTask(int index, TaskData updatedTask) {
+    if (index >= 0 && index < tasks.length) {
+      tasks[index] = updatedTask;
+      tasks.refresh(); // trigger UI rebuild
+      saveTasksToStorage(); // also persist the update
+    }
+  }
+
+  // ✅ Add this method for deleting a task
+  void deleteTask(int index) {
+    if (index >= 0 && index < tasks.length) {
+      tasks.removeAt(index);
+      saveTasksToStorage(); // save after deletion
+    }
+  }
 }

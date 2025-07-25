@@ -67,8 +67,9 @@ flutter:
   - assets/images/user.jpeg
   - assets/images/container.png
   - assets/images/task.jpeg
-  - assets/images/icon_container.jpeg
-  - assets/images/addtask_icon.jpeg
+  - assets/images/profile_logo.jpeg
+  - assets/images/my_profile_logo.jpeg
+  
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
