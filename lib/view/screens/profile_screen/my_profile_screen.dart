@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:practice_todoapp/gen/assets.gen.dart';
+import 'package:practice_todoapp/utils/routes/routes.dart';
 import 'package:practice_todoapp/view/screens/add_task_screen/add_task_screen.dart';
 import 'package:practice_todoapp/view/screens/home_screen/home_screen.dart';
+import 'package:practice_todoapp/view/screens/profile_screen/edit_profile_screen.dart';
 
 class MyProfileScreen extends StatelessWidget {
   const MyProfileScreen({super.key});
@@ -34,7 +36,8 @@ class MyProfileScreen extends StatelessWidget {
                     ),
                   ),
                   _circularButton(Icons.edit, () {
-                    // Handle edit
+                    Get.to(() => EditProfileScreen());
+                    Get.toNamed(AppRoutes.editProfile); 
                   }),
                 ],
               ),

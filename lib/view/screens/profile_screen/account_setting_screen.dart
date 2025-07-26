@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:practice_todoapp/utils/routes/routes.dart';
 
 class AccountSettingScreen extends StatelessWidget {
   const AccountSettingScreen({super.key});
@@ -17,14 +18,17 @@ class AccountSettingScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _circularButton(Icons.arrow_back_ios_new_rounded, () {
                     Get.back();
                   }),
                   const SizedBox(width: 8),
                   const Text(
+                    
                     "Account Setting",
                     style: TextStyle(
+                      
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -45,7 +49,7 @@ class AccountSettingScreen extends StatelessWidget {
                     title: "Change Password",
                     iconColor: Colors.lightGreen,
                     onTap: () {
-                      // TODO: Implement change password
+                       Get.toNamed(AppRoutes.changePassword);
                     },
                   ),
                   const SizedBox(height: 12),

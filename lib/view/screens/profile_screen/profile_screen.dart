@@ -54,9 +54,18 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  _buildOptionTile(Icons.description, "Terms & Condition"),
-                  _buildOptionTile(Icons.privacy_tip_outlined, "Privacy Policy"),
-                  _buildOptionTile(Icons.help_outline, "Help/Support"),
+                  _buildOptionTile(Icons.description, "Terms & Condition", onTap: () {
+                         Get.toNamed(AppRoutes.termsAndConditions);
+                         }),
+
+                   _buildOptionTile(Icons.description, "Privacy Policy", onTap: () {
+                         Get.toNamed(AppRoutes.privacypolicy);
+                         }),
+
+                   _buildOptionTile(Icons.description, "help/Support", onTap: () {
+                         Get.toNamed(AppRoutes.helpsupport);
+                         }),
+
                   _buildOptionTile(Icons.logout_sharp, "Log Out"),
                 ],
               ),

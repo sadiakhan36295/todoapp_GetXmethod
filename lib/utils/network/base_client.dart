@@ -31,6 +31,41 @@ class BaseClient {
     }
   }
 
+  /// PUT Request with Multipart data
+static Future<dynamic> putMultipart(
+  String api,
+  Map<String, String> fields,
+  Map<String, File> files,
+) async {
+  debugPrint("\nYou hit: $api");
+  debugPrint("Fields: $fields");
+
+  final StorageService storageService = Get.put(StorageService());
+  String? accessToken = storageService.read<String>('accessToken');
+
+  var headers = {
+    'Accept': 'application/json',
+    if (accessToken != null) 'Authorization': 'Bearer $accessToken',
+  };
+
+  var request = http.MultipartRequest('PUT', Uri.parse(api))
+    ..fields.addAll(fields)
+    ..headers.addAll(headers);
+
+  for (var entry in files.entries) {
+    request.files.add(await http.MultipartFile.fromPath(entry.key, entry.value.path));
+  }
+
+  try {
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    return handleResponse(response); // Reuse your existing response handler
+  } catch (e) {
+    throw "PUT upload failed: ${e.toString()}";
+  }
+}
+
+
   /// POST Request with token and JSON encoding
   static Future<dynamic> postRequest({
     required String api,
@@ -91,34 +126,39 @@ class BaseClient {
   }
 
   /// PATCH Request
-  static Future<http.Response> patchRequest({
-    required String api,
-    required Map<String, dynamic> body,
-  }) async {
-    debugPrint('\nYou hit: $api');
-    debugPrint('Request Body: ${jsonEncode(body)}');
+  static Future<dynamic> patchMultipart(
+  String api,
+  Map<String, String> fields,
+  Map<String, File> files,
+) async {
+  debugPrint("\nPATCH: $api");
+  debugPrint("Fields: $fields");
 
-    final StorageService storageService = Get.put(StorageService());
-    String? accessToken = storageService.read<String>('accessToken');
+  final StorageService storageService = Get.put(StorageService());
+  String? accessToken = storageService.read<String>('accessToken');
 
-    var headers = {
-      'Content-Type': 'application/json',
-      if (accessToken != null) "Authorization": "Bearer $accessToken",
-    };
+  var headers = {
+    'Accept': 'application/json',
+    if (accessToken != null) 'Authorization': 'Bearer $accessToken',
+  };
 
-    try {
-      http.Response response = await http.patch(
-        Uri.parse(api),
-        body: jsonEncode(body),
-        headers: headers,
-      );
-      return response;
-    } on SocketException {
-      throw noInternetMessage;
-    } catch (e) {
-      throw e.toString();
-    }
+  var request = http.MultipartRequest('PATCH', Uri.parse(api))
+    ..fields.addAll(fields)
+    ..headers.addAll(headers);
+
+  for (var entry in files.entries) {
+    request.files.add(await http.MultipartFile.fromPath(entry.key, entry.value.path));
   }
+
+  try {
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    return handleResponse(response);
+  } catch (e) {
+    throw "PATCH upload failed: ${e.toString()}";
+  }
+}
+
 
   /// Multipart POST Request
   static Future<dynamic> multipartAddRequest({

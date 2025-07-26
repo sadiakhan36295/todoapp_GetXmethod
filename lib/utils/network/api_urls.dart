@@ -6,5 +6,7 @@ class ApiUrl {
   static String signUp = "$baseUrl/auth/signup";
    static String signIn = "$baseUrl/auth/login";
    static const addTask = "$baseUrl/users/my-profile";
+    static const String myProfile = "$baseUrl/users/my-profile";
+   static const String updateProfile = "$baseUrl/users/update-profile"; 
 
 }
