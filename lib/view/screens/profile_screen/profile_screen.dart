@@ -59,11 +59,11 @@ class ProfileScreen extends StatelessWidget {
                          }),
 
                    _buildOptionTile(Icons.description, "Privacy Policy", onTap: () {
-                         Get.toNamed(AppRoutes.privacypolicy);
+                         Get.toNamed(AppRoutes.privacyPolicy);
                          }),
 
                    _buildOptionTile(Icons.description, "help/Support", onTap: () {
-                         Get.toNamed(AppRoutes.helpsupport);
+                         Get.toNamed(AppRoutes.helpSupport);
                          }),
 
                   _buildOptionTile(Icons.logout_sharp, "Log Out"),

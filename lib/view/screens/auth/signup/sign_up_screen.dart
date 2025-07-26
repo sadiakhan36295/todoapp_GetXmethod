@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:practice_todoapp/utils/routes/routes.dart';
 import 'package:practice_todoapp/view/screens/auth/verify_email/verify_email_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -118,7 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const Text("Already have an account? "),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context); // Back to SignInScreen
+                      Navigator.pop(context);
                     },
                     child: const Text(
                       "Log In",
@@ -137,14 +139,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (formKey.currentState!.validate() && agreeToPolicy) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const VerifyEmailScreen(),
-                        ),
-                      );
-                    }
+                   if (formKey.currentState!.validate() && agreeToPolicy) {
+             Get.toNamed(AppRoutes.verifyEmail, arguments: emailController.text.trim());
+             }
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightGreen,
